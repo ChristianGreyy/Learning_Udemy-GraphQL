@@ -62,7 +62,12 @@ module.exports = {
             userId: user._id.toString(),
         }
     },
-    async createInput({ postInput }, req) {
+    async createPost({ postInput }, req) {
+        if (!req.isAuth) {
+            const error = new Error('Not authenticated!');
+            error.code = 401;
+            throw error;
+          }
         const errors = [];
         if(validator.isEmpty(postInput.title) || !validator.isLength(postInput.title, { min: 5 })) {
             errors.push({
